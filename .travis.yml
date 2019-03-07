@@ -1,26 +1,55 @@
-
 sudo: required
 services:
   - docker
+before_install: 
+  - docker build -t para27rsh/docker-complex -f ./client/Dockerfile.dev ./client
 
-before_install:
-  - docker build -t nalli/docker-react -f Dockerfile.dev .
 
-script:
-  - docker run nalli/docker-react npm run test -- --coverage
+script: 
+  - docker run para27rsh/docker-complex npm test -- --coverage
 
 after_success:
-  - docker build -t nalli/multi-client ./client
-  - docker build -t nalli/multi-nginx ./nginx
-  - docker build -t nalli/multi-server ./server
-  - docker build -t nalli/multi-worker ./worker
-# Login in to Docer cli 
+  - docker build -t para27rsh/docker-complex-client  ./client
+  - docker build -t para27rsh/docker-complex-nginx   ./nginx
+  - docker build -t para27rsh/docker-complex-server  ./server
+  - docker build -t para27rsh/docker-complex-worker  ./worker
+
+
+#Log in in Docker CLI
   - echo "$DOCKER_PASSOWRD" | docker login -u "$DOCKER_ID" --password-stdin
-# Take those images and put in to Docker hub
-  - docker push nalli/multi-client
-  - docker push nalli/multi-nginx
-  - docker push nalli/multi-server
-  - docker push nalli/multi-worker
+#Take those Images  and push them to docker hub
+
+  - docker push para27rsh/docker-complex-client
+  - docker push para27rsh/docker-complex-nginx
+  - docker push para27rsh/docker-complex-server
+  - docker push para27rsh/docker-complex-worker
+
+
+
+
+
+# sudo: required
+# services:
+#   - docker
+
+# before_install:
+#   - docker build -t nalli/docker-react -f Dockerfile.dev .
+
+# script:
+#   - docker run nalli/docker-react npm run test -- --coverage
+
+# after_success:
+#   - docker build -t nalli/multi-client ./client
+#   - docker build -t nalli/multi-nginx ./nginx
+#   - docker build -t nalli/multi-server ./server
+#   - docker build -t nalli/multi-worker ./worker
+# # Login in to Docer cli 
+#   - echo "$DOCKER_PASSOWRD" | docker login -u "$DOCKER_ID" --password-stdin
+# # Take those images and put in to Docker hub
+#   - docker push nalli/multi-client
+#   - docker push nalli/multi-nginx
+#   - docker push nalli/multi-server
+#   - docker push nalli/multi-worker
 
   
 
@@ -37,34 +66,6 @@ after_success:
 #   access_key_id: $AWS_ACCESS_KEY
 #   secret_access_key:
 #     secure: $AWS_SECRET_KEY
-
-
-# sudo: required
-# services:
-#   - docker
-# before_install: 
-#   - docker build -t para27rsh/docker-complex -f ./client/Dockerfile.dev ./client
-
-
-# script: 
-#   - docker run para27rsh/docker-complex npm test -- --coverage
-
-# after_success:
-#   - docker build -t para27rsh/docker-complex-client  ./client
-#   - docker build -t para27rsh/docker-complex-nginx   ./nginx
-#   - docker build -t para27rsh/docker-complex-server  ./server
-#   - docker build -t para27rsh/docker-complex-worker  ./worker
-
-
-# #Log in in Docker CLI
-#   - echo "$DOCKER_PASSOWRD" | docker login -u "$DOCKER_ID" --password-stdin
-# #Take those Images  and push them to docker hub
-
-#   - docker push para27rsh/docker-complex-client
-#   - docker push para27rsh/docker-complex-nginx
-#   - docker push para27rsh/docker-complex-server
-#   - docker push para27rsh/docker-complex-worker
-
 
 # sudo: required
 # services:
